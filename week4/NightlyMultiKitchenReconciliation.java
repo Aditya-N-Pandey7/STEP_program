@@ -32,18 +32,15 @@ class DeliveryAccount {
 
     void processAccount(DeliveryAccount account, double amount, int delayMinutes) {
         if (account == null) return;
-        System.out.println(account.studentId + " surge fee: Rs " + account.calculateSurgeFee(delayMinutes));
+        double fee = account.calculateSurgeFee(delayMinutes);
+        if (account instanceof PremiumDeliveryAccount) fee *= 0.5;
+        System.out.println(account.studentId + " surge fee: Rs " + fee);
     }
 }
 
 class PremiumDeliveryAccount extends DeliveryAccount {
     PremiumDeliveryAccount(String studentId, double orderValue) {
         super(studentId, orderValue);
-    }
-
-    @Override
-    public final double calculateSurgeFee(int delayMinutes) {
-        return super.calculateSurgeFee(delayMinutes) * 0.5;
     }
 }
 
@@ -63,10 +60,14 @@ public class NightlyMultiKitchenReconciliation {
                 continue;
             }
             double fee = account.calculateSurgeFee(delayMinutesArray[i]);
+            if (account instanceof PremiumDeliveryAccount) {
+                fee *= 0.5; // premium settlement: half of the regular surge fee
+                premium++;
+            } else {
+                regular++;
+            }
             grandTotal += fee;
             processed++;
-            if (account instanceof PremiumDeliveryAccount) premium++;
-            else regular++;
         }
 
         System.out.println(processed + " processed | " + nullSkipped + " null skipped | "
