@@ -81,6 +81,10 @@ class SrmStudent {
         this.room = room;
     }
 
+    void payFee(double amount) {
+        feeAccount.pay(amount);
+    }
+
     String fullStatus() {
         return name + " | Due: Rs " + feeAccount.getDue() + " | Room: "
                 + (room == null ? "unallotted" : room.getRoomNo());
@@ -99,59 +103,18 @@ public class SrmFeeHostelSystem {
         CapstoneHostelRoom room1 = new CapstoneHostelRoom("C-214", 3, 2);
         CapstoneHostelRoom room2 = new CapstoneHostelRoom("C-507", 2, 1);
 
-        room1.allot(raviName());
+        room1.allot("Ravi");
         ravi.assignRoom(room1);
         room2.allot("Anitha");
         anitha.assignRoom(room2);
 
-        raviFee(ravi);
-        anithaFee(anitha);
-        karthikFee(karthik);
+        ravi.payFee(10000);     // Valid payment: due = Rs 140000.
+        anitha.payFee(20000);   // Valid payment: due = Rs 180000.
+        karthik.payFee(-5000);  // Rejected payment; due remains Rs 200000.
 
         System.out.println(ravi.fullStatus());
         System.out.println(anitha.fullStatus());
         System.out.println(karthik.fullStatus());
         System.out.println("Total students: " + SrmStudent.totalStudents);
-    }
-
-    private static String raviName() {
-        return "Ravi";
-    }
-
-    private static void raviFee(SrmStudent student) {
-        // Valid payment; Ravi's due becomes Rs 140000.
-        // The student object keeps its fee account as a composed object.
-        // Payment is made through the fee account reference held by the student.
-        // No direct field access is needed because feeAccount is encapsulated.
-        try {
-            java.lang.reflect.Field field = SrmStudent.class.getDeclaredField("feeAccount");
-            field.setAccessible(true);
-            CapstoneHostelFeeAccount account = (CapstoneHostelFeeAccount) field.get(student);
-            account.pay(10000);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static void anithaFee(SrmStudent student) {
-        try {
-            java.lang.reflect.Field field = SrmStudent.class.getDeclaredField("feeAccount");
-            field.setAccessible(true);
-            CapstoneHostelFeeAccount account = (CapstoneHostelFeeAccount) field.get(student);
-            account.pay(20000);
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(e);
-        }
-    }
-
-    private static void karthikFee(SrmStudent student) {
-        try {
-            java.lang.reflect.Field field = SrmStudent.class.getDeclaredField("feeAccount");
-            field.setAccessible(true);
-            CapstoneHostelFeeAccount account = (CapstoneHostelFeeAccount) field.get(student);
-            account.pay(-5000); // Rejected payment, as required by the problem.
-        } catch (ReflectiveOperationException e) {
-            throw new IllegalStateException(e);
-        }
     }
 }
