@@ -8,9 +8,9 @@ class PremiumWorkshopTicket extends WorkshopTicket {
     }
 
     @Override
-    public void printTicket() {
-        System.out.println("Premium Workshop Ticket | Track: " + getTrack()
-                + " | Kit Fee: " + kitFee + " | Balance Due: " + getBalanceDue());
+    public String printTicket() {
+        return "Premium Workshop Ticket | Track: " + getTrack()
+                + " | Kit Fee: " + kitFee + " | Balance Due: " + getBalanceDue();
     }
 }
 
@@ -23,48 +23,37 @@ class HackathonTicket extends EventTicket {
     }
 
     @Override
-    public void printTicket() {
-        System.out.println("Hackathon Ticket | Team: " + teamName + " | Balance Due: " + getBalanceDue());
+    public String printTicket() {
+        return "Hackathon Ticket | Team: " + teamName + " | Balance Due: " + getBalanceDue();
     }
 }
 
 public class ThreeShapesFamilyTree {
     static String classifyGeneration(EventTicket ticket) {
-        if (ticket instanceof PremiumWorkshopTicket) {
-            return "Multilevel descendant (3 generations deep)";
-        }
-        if (ticket instanceof HackathonTicket) {
-            return "Hierarchical sibling (independent branch)";
-        }
-        if (ticket instanceof WorkshopTicket) {
-            return "Workshop descendant (2 generations deep)";
-        }
+        if (ticket instanceof PremiumWorkshopTicket) return "Multilevel descendant (3 generations deep)";
+        if (ticket instanceof HackathonTicket) return "Hierarchical sibling (independent branch)";
+        if (ticket instanceof WorkshopTicket) return "Workshop descendant (2 generations deep)";
         return "Base generation";
     }
 
     static double getTotalBalanceDue(EventTicket[] tickets) {
         double total = 0;
-        for (EventTicket ticket : tickets) {
-            total += ticket.getBalanceDue();
-        }
+        for (EventTicket ticket : tickets) total += ticket.getBalanceDue();
         return total;
     }
 
     public static void main(String[] args) {
         EventTicket standardTicket = new EventTicket("STU1", 500);
         WorkshopTicket workshopTicket = new WorkshopTicket("STU2", 1200, "AI/ML");
-        PremiumWorkshopTicket premiumTicket = new PremiumWorkshopTicket(
-                "STU3", 2000, "Cloud Native", 300);
+        PremiumWorkshopTicket premiumTicket = new PremiumWorkshopTicket("STU3", 2000, "Cloud Native", 300);
         HackathonTicket hackathonTicket = new HackathonTicket("STU4", 800, "Byte Force");
 
-        standardTicket.printTicket();
-        workshopTicket.printTicket();
-        premiumTicket.printTicket();
-        hackathonTicket.printTicket();
-
+        System.out.println(standardTicket.printTicket());
+        System.out.println(workshopTicket.printTicket());
+        System.out.println(premiumTicket.printTicket());
+        System.out.println(hackathonTicket.printTicket());
         System.out.println(classifyGeneration(premiumTicket));
         System.out.println(classifyGeneration(hackathonTicket));
-        System.out.println(getTotalBalanceDue(
-                new EventTicket[]{standardTicket, workshopTicket, premiumTicket, hackathonTicket}));
+        System.out.println(getTotalBalanceDue(new EventTicket[]{standardTicket, workshopTicket, premiumTicket, hackathonTicket}));
     }
 }
