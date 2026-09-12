@@ -40,9 +40,7 @@ class EventTicket {
     protected void applyLateFee(double amount) {
         if (amount <= 0) return;
         amountPaid -= amount;
-        if (lateFeeCount < lateFeeHistory.length) {
-            lateFeeHistory[lateFeeCount++] = amount;
-        }
+        if (lateFeeCount < lateFeeHistory.length) lateFeeHistory[lateFeeCount++] = amount;
     }
 
     public double[] getLateFeeHistory() {
@@ -51,8 +49,8 @@ class EventTicket {
         return copy;
     }
 
-    public void printTicket() {
-        System.out.println("Standard Event Ticket | Balance Due: " + getBalanceDue());
+    public String printTicket() {
+        return "Standard Event Ticket | Balance Due: " + getBalanceDue();
     }
 
     public static String registerBatch(String[] attendeeIds, double basePrice) {
@@ -78,9 +76,7 @@ class EventTicket {
                 && Character.isUpperCase(code.charAt(4));
     }
 
-    public static int getTicketsIssued() {
-        return issuedCount - 1000;
-    }
+    public static int getTicketsIssued() { return issuedCount - 1000; }
 }
 
 class WorkshopTicket extends EventTicket {
@@ -104,8 +100,8 @@ class WorkshopTicket extends EventTicket {
     }
 
     @Override
-    public void printTicket() {
-        System.out.println("Workshop Ticket | Track: " + track + " | Balance Due: " + getBalanceDue());
+    public String printTicket() {
+        return "Workshop Ticket | Track: " + track + " | Balance Due: " + getBalanceDue();
     }
 }
 
